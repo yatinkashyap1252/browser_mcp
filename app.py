@@ -4,7 +4,6 @@ from bs4 import BeautifulSoup
 from ddgs import DDGS
 from groq import Groq
 import os
-print("DEBUG KEY:", os.getenv("GROQ_API_KEY"))
 app = Flask(__name__)
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))

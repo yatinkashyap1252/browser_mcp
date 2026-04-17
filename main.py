@@ -22,9 +22,6 @@ def search_web(query):
     
     return results
 
-# OLLAMA_URL = "http://localhost:11434/api/generate"
-# MODEL = "llama3"
-
 # ---------------- TOOL ----------------
 def open_url(url):
     try:
@@ -37,18 +34,6 @@ def open_url(url):
 
     except Exception as e:
         return f"Error fetching URL: {e}"
-
-# ---------------- AI CALL ----------------
-# def ask_ai(prompt):
-#     response = requests.post(
-#         OLLAMA_URL,
-#         json={
-#             "model": MODEL,
-#             "prompt": prompt,
-#             "stream": False
-#         }
-#     )
-#     return response.json()["response"]
 
 # ---------------- AGENT LOOP ----------------
 SYSTEM_PROMPT = """
@@ -119,37 +104,3 @@ while True:
 
     if final_answer:
         print("AI:", final_answer)
-# while True:
-#     user_input = input("You: ")
-
-#     if user_input.lower() == "exit":
-#         break
-
-    # prompt = SYSTEM_PROMPT + "\nUser: " + user_input
-    # messages = [
-    #     {"role": "system", "content": SYSTEM_PROMPT},
-    #     {"role": "user", "content": user_input}
-    # ]
-
-    # for _ in range(2):  # allow multiple steps
-    #     ai_response = ask_ai(prompt)
-
-    #     if ai_response.startswith("TOOL:search_web:"):
-    #         query = ai_response.replace("TOOL:search_web:", "").strip()
-    #         print("🔍 Searching:", query)
-
-    #         results = search_web(query)
-
-    #         prompt += f"\nSearch results: {results}\n"
-
-    #     elif ai_response.startswith("TOOL:open_url:"):
-    #         url = ai_response.replace("TOOL:open_url:", "").strip()
-    #         print("🌐 Opening:", url)
-
-    #         content = open_url(url)
-
-    #         prompt += f"\nContent from {url}:\n{content}\n"
-
-    #     else:
-    #         print("AI:", ai_response)
-    #         break
