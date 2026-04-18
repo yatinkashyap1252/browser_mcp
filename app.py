@@ -34,7 +34,7 @@ def search_web(query):
 
 def open_url(url):
     try:
-        res = requests.get(url, timeout=10)
+        res = requests.get(url, timeout=20)
         soup = BeautifulSoup(res.text, "html.parser")
         return soup.get_text()[:2000]
     except Exception as e:
@@ -51,37 +51,49 @@ def ask_ai(messages):
 # -------- API --------
 @app.route("/chat", methods=["POST"])
 def chat():
-    user_input = request.json.get("message")
+    try:
+        user_input = request.json.get("message")
 
-    messages = [
-        {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user", "content": user_input}
-    ]
+        if not user_input:
+            return jsonify({"response": "No input provided"}), 400
 
-    for _ in range(2):
-        ai_response = ask_ai(messages)
+        messages = [
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": user_input}
+        ]
 
-        if ai_response.startswith("TOOL:search_web:"):
-            query = ai_response.replace("TOOL:search_web:", "").strip()
-            results = search_web(query)
+        # Maximum number of tool invocation steps allowed per request
+        MAX_TOOL_STEPS = 2
+        for _ in range(MAX_TOOL_STEPS):
+            ai_response = ask_ai(messages)
 
-            messages.append({"role": "assistant", "content": ai_response})
-            messages.append({"role": "user", "content": f"Search results: {results}"})
+            if ai_response.startswith("TOOL:search_web:"):
+                query = ai_response.replace("TOOL:search_web:", "").strip()
+                results = search_web(query)
 
-        elif ai_response.startswith("TOOL:open_url:"):
-            url = ai_response.replace("TOOL:open_url:", "").strip()
-            content = open_url(url)
+                messages.append({"role": "assistant", "content": ai_response})
+                messages.append({"role": "user", "content": f"Search results: {results}"})
 
-            messages.append({"role": "assistant", "content": ai_response})
-            messages.append({
-                "role": "user",
-                "content": f"Content:\n{content}\nGive final answer."
-            })
+            elif ai_response.startswith("TOOL:open_url:"):
+                url = ai_response.replace("TOOL:open_url:", "").strip()
+                content = open_url(url)
 
-        else:
-            return jsonify({"response": ai_response})
+                messages.append({"role": "assistant", "content": ai_response})
+                messages.append({
+                    "role": "user",
+                    "content": f"Content:\n{content}\nGive final answer."
+                })
 
-    return jsonify({"response": "Could not complete request"})
+            else:
+                return jsonify({"response": ai_response})
+
+        return jsonify({"response": "Could not complete request"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/")
+def home():
+    return "Server is running"
 
 
 if __name__ == "__main__":
