@@ -1,7 +1,11 @@
+from flask import jsonify
 import requests
 from bs4 import BeautifulSoup
 from ddgs import DDGS
 from groq import Groq
+import time
+
+start = time.time()
 
 client = Groq()
 
@@ -78,7 +82,10 @@ while True:
 
     final_answer = None
 
-    for _ in range(2):
+    for _ in range(1):
+        if time.time() - start > 20:
+            print("Request took too long. Try again.")
+            break
         ai_response = ask_ai(messages)
 
         if ai_response.startswith("TOOL:search_web:"):
