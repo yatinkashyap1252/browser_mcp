@@ -76,7 +76,7 @@ while True:
 
         if ai_response.startswith("TOOL:search_web:"):
             query = ai_response.replace("TOOL:search_web:", "").strip()
-            print("🔍 Searching:", query)
+            # print("🔍 Searching:", query)
 
             results = search_web(query)
 
@@ -88,7 +88,7 @@ while True:
 
         elif ai_response.startswith("TOOL:open_url:"):
             url = ai_response.replace("TOOL:open_url:", "").strip()
-            print("🌐 Opening:", url)
+            # print("🌐 Opening:", url)
 
             content = open_url(url)
 
