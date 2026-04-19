@@ -40,34 +40,34 @@ def open_url(url):
         return f"Error fetching URL: {e}"
 
 # ---------------- AGENT LOOP ----------------
-SYSTEM_PROMPT = """
-You are a helpful AI assistant.
-
-- Answer directly if you already know the answer
-- Use web search ONLY if necessary
-- Keep responses fast and concise
-"""
 # SYSTEM_PROMPT = """
-# You are an AI agent with tools.
+# You are a helpful AI assistant.
 
-# Available tools:
-
-# 1. search_web(query)
-# Format: TOOL:search_web:<query>
-
-# 2. open_url(url)
-# Format: TOOL:open_url:<url>
-
-# Rules:
-# - NEVER explain your steps
-# - NEVER mention tools in final answer
-# - NEVER show TOOL commands to user
-# - Use tools silently when needed
-# - First search, then open one link
-# - After getting content, give final answer
-# - If enough info is available, answer directly
-# - Keep answers clean and user-friendly
+# - Answer directly if you already know the answer
+# - Use web search ONLY if necessary
+# - Keep responses fast and concise
 # """
+SYSTEM_PROMPT = """
+You are an AI agent with tools.
+
+Available tools:
+
+1. search_web(query)
+Format: TOOL:search_web:<query>
+
+2. open_url(url)
+Format: TOOL:open_url:<url>
+
+Rules:
+- NEVER explain your steps
+- NEVER mention tools in final answer
+- NEVER show TOOL commands to user
+- Use tools silently when needed
+- First search, then open one link
+- After getting content, give final answer
+- If enough info is available, answer directly
+- Keep answers clean and user-friendly
+"""
 
 while True:
     user_input = input("You: ")
