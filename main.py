@@ -47,6 +47,7 @@ def open_url(url):
 # - Use web search ONLY if necessary
 # - Keep responses fast and concise
 # """
+# ************************************
 SYSTEM_PROMPT = """
 You are an AI agent with tools.
 
